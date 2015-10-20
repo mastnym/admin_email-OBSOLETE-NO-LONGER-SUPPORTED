@@ -19,7 +19,7 @@ $direction  = optional_param('dir', 'ASC', PARAM_ACTION);
 $blockname  = get_string('pluginname', 'block_admin_email');
 $header     = get_string('send_email', 'block_admin_email');
 
-$context    = get_context_instance(CONTEXT_SYSTEM);
+$context    = context_system::instance();
 
 $PAGE->set_context($context);
 $PAGE->set_url('/blocks/admin_email/');
@@ -53,17 +53,17 @@ $fields = array(
 
 $ufiltering         = new user_filtering($fields);
 list($sql, $params) = $ufiltering->get_sql_filter();
-$usersearchcount    = get_users(false, '', true, null, '', '', '', '', '', 
+$usersearchcount    = get_users(false, '', true, null, '', '', '', '', '',
                 '*', $sql, $params);
 
 if(empty($sort)) $sort = 'lastname';
 
 $display_users  = empty($sql) ? array() :
-    get_users_listing($sort, $direction, $page*$perpage, 
+    get_users_listing($sort, $direction, $page*$perpage,
     $perpage, '', '', '', $sql, $params);
 
 $users          = empty($sql) ? array() :
-    get_users_listing($sort, $direction, 0, 
+    get_users_listing($sort, $direction, 0,
     0, '', '', '', $sql, $params);
 
 $form = new email_form();
@@ -121,12 +121,12 @@ if(!empty($display_users)) {
     }
     $table = new html_table();
 
-    $table->head = array("$firstname / $lastname", $email, $city, $lastaccess); 
+    $table->head = array("$firstname / $lastname", $email, $city, $lastaccess);
     $table->data = array_map(function($user) {
         $fullname = fullname($user);
         $email = $user->email;
         $city = $user->city;
-        $lastaccess_time = isset($user->lastaccess) ? 
+        $lastaccess_time = isset($user->lastaccess) ?
             format_time(time() - $user->lastaccess) : get_string('never');
         return array($fullname, $email, $city, $lastaccess_time);
     }, $display_users);
