@@ -11,6 +11,8 @@ require_once 'email_form.php';
 
 require_login();
 
+require_capability('moodle/site:config', context_system::instance());
+
 $page       = optional_param('page', 0, PARAM_INT);
 $perpage    = optional_param('perpage', 20, PARAM_INT);
 $sort       = optional_param('sort', '', PARAM_ACTION);
